@@ -1,0 +1,13 @@
+parameter,value
+case_name,Earlougher Example 9.1
+model,line_source
+h_ft,45
+mu_cp,1.0
+B_rb_stb,1.0
+ct_psi_inv,
+robust_loss,linear
+aspect_ratio_width_over_height,
+source_xD,
+source_yD,
+rectangle_angle_deg,
+interporosity_model,

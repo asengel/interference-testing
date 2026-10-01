@@ -1,0 +1,11 @@
+Earlougher Example 9.2
+model = closed_rectangle
+k = 54.767379 mD
+phi*ct = 9.41309545e-07 1/psi
+width = 2648.726209 ft
+height = 1324.363104 ft
+area = 80.529735 acres
+observation xD = 0.500000
+observation yD = 0.493273
+phi = 0.113411
+RMSE = 0.621736 psi

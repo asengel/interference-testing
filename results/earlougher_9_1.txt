@@ -1,0 +1,5 @@
+Earlougher Example 9.1
+model = line_source
+k = 5.505271 mD
+phi*ct = 9.84683701e-07 1/psi
+RMSE = 2.236484 psi
