@@ -2,7 +2,7 @@
 
 The user selects the physical model and supplies the measured pressure history, rate history, well geometry, and known reservoir/fluid properties. The program then estimates the unknown model parameters by nonlinear least-squares history matching.
 
-(results/earlougher_9_1.png)
+![Example 9.1 (Earlougher, 1977)](results/earlougher_9_1.png)
 
 ## Reference
 
