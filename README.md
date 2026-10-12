@@ -69,10 +69,16 @@ Sengel, A. (2025). Interference Testing: Theory and Application in Geothermal En
 
 ## References
 
-Earlougher, R. C., Jr. (1977). Advances in Well Test Analysis. SPE Monograph Vol. 5.
-Hantush, M. S., & Jacob, C. E. (1955). Non-Steady Radial Flow in an Infinite Leaky Aquifer. Transactions, American Geophysical Union, 36(1), 95â€“100. https://doi.org/10.1029/TR036i001p00095
+Earlougher, R. C., Jr. (1977). Advances in Well Test Analysis. SPE Monograph, Vol. 5.
+
+Hantush, M. S., & Jacob, C. E. (1955). Non-Steady Radial Flow in an Infinite Leaky Aquifer. Transactions, American Geophysical Union, 36(1), 95-100. https://doi.org/10.1029/TR036i001p00095
+
 Sandal, H. M., et al. (1978). Interference Testing With Wellbore Storage and Skin Effect at the Produced Well. SPE Annual Technical Conference and Exhibition, Houston, Texas, SPE-7454-MS.
-Stehfest, H. (1970). Algorithm 368: Numerical Inversion of Laplace Transforms [D5]. Communications of the ACM, 13(1), 47â€“49. https://doi.org/10.1145/361953.361969
-Theis, C. V. (1935). The Relation Between the Lowering of the Piezometric Surface and the Rate and Duration of Discharge of a Well Using Ground-Water Storage. Transactions, American Geophysical Union, 16(2), 519â€“524. https://doi.org/10.1029/TR016i002p00519
-Tongpenyai, Y., & Raghavan, R. (1981). The Effect of Wellbore Storage and Skin on Interference Test Data. Journal of Petroleum Technology, 33(1), 151â€“160. https://doi.org/10.2118/8863-PA
-Warren, J. E., & Root, P. J. (1963). The Behavior of Naturally Fractured Reservoirs. Society of Petroleum Engineers Journal, 3(3), 245â€“255. https://doi.org/10.2118/426-PA
+
+Stehfest, H. (1970). Algorithm 368: Numerical Inversion of Laplace Transforms [D5]. Communications of the ACM, 13(1), 47-49. https://doi.org/10.1145/361953.361969
+
+Theis, C. V. (1935). The Relation Between the Lowering of the Piezometric Surface and the Rate and Duration of Discharge of a Well Using Ground-Water Storage. Transactions, American Geophysical Union, 16(2), 519-524. https://doi.org/10.1029/TR016i002p00519
+
+Tongpenyai, Y., & Raghavan, R. (1981). The Effect of Wellbore Storage and Skin on Interference Test Data. Journal of Petroleum Technology, 33(1), 151-160. https://doi.org/10.2118/8863-PA
+
+Warren, J. E., & Root, P. J. (1963). The Behavior of Naturally Fractured Reservoirs. Society of Petroleum Engineers Journal, 3(3), 245-255. https://doi.org/10.2118/426-PA
