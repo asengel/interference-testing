@@ -40,7 +40,7 @@ Keep four files in any directory, for example `C:\well-tests\my_test\`, and run:
 python examples/run.py --case-dir "C:\well-tests\my_test"
 ```
 
-The figure and summary are written into that case folder's `results/` subfolder. 
+The figure and summary are written into that case folder's `results/` subfolder.
 
 ## Input files
 
@@ -53,7 +53,7 @@ Each case needs three CSV files. A fourth (`pressure.csv`) is required only for 
 | `rates.csv` | `well,time_hr,rate_stbd` | Active well's piecewise-constant **rate levels**, not rate increments; positive = production |
 | `pressure.csv` (optional in `manual`) | `well,time_hr,dp_psi` | Observation-well signed pressure drop in psi |
 
-`time_hr` is elapsed hours since the same time origin in both CSVs. 
+`time_hr` is elapsed hours since the same time origin in both CSVs.
 
 ## Validation and numerical boundaries
 
@@ -63,16 +63,16 @@ For **variable-rate tests**, the second panel displays pressure residuals becaus
 
 ## Citation
 
-If you use this repository in your research or technical work, please consider citing the following published paper, which demonstrates the application of interference testing to a geothermal doublet case. 
+If you use this repository in your research or technical work, please consider citing the following published paper, which demonstrates the application of interference testing to a geothermal doublet case.
 
 Sengel, A. (2025). Interference Testing: Theory and Application in Geothermal Energy. Sixth EAGE Global Energy Transition Conference & Exhibition (GET 2025). https://doi.org/10.3997/2214-4609.202521057
 
 ## References
 
-Earlougher, R. C., Jr. (1977). Advances in Well Test Analysis. SPE Monograph Vol. 5. 
-Hantush, M. S., & Jacob, C. E. (1955). Non-Steady Radial Flow in an Infinite Leaky Aquifer. Transactions, American Geophysical Union, 36(1), 95–100. https://doi.org/10.1029/TR036i001p00095
-Sandal, H. M., et al. (1978). Interference Testing With Wellbore Storage and Skin Effect at the Produced Well. SPE Annual Technical Conference and Exhibition, Houston, Texas, SPE-7454-MS. 
-Stehfest, H. (1970). Algorithm 368: Numerical Inversion of Laplace Transforms [D5]. Communications of the ACM, 13(1), 47–49. https://doi.org/10.1145/361953.361969 
-Theis, C. V. (1935). The Relation Between the Lowering of the Piezometric Surface and the Rate and Duration of Discharge of a Well Using Ground-Water Storage. Transactions, American Geophysical Union, 16(2), 519–524. https://doi.org/10.1029/TR016i002p00519
-Tongpenyai, Y., & Raghavan, R. (1981). The Effect of Wellbore Storage and Skin on Interference Test Data. Journal of Petroleum Technology, 33(1), 151–160. https://doi.org/10.2118/8863-PA 
-Warren, J. E., & Root, P. J. (1963). The Behavior of Naturally Fractured Reservoirs. Society of Petroleum Engineers Journal, 3(3), 245–255. https://doi.org/10.2118/426-PA
+Earlougher, R. C., Jr. (1977). Advances in Well Test Analysis. SPE Monograph Vol. 5.
+Hantush, M. S., & Jacob, C. E. (1955). Non-Steady Radial Flow in an Infinite Leaky Aquifer. Transactions, American Geophysical Union, 36(1), 95â€“100. https://doi.org/10.1029/TR036i001p00095
+Sandal, H. M., et al. (1978). Interference Testing With Wellbore Storage and Skin Effect at the Produced Well. SPE Annual Technical Conference and Exhibition, Houston, Texas, SPE-7454-MS.
+Stehfest, H. (1970). Algorithm 368: Numerical Inversion of Laplace Transforms [D5]. Communications of the ACM, 13(1), 47â€“49. https://doi.org/10.1145/361953.361969
+Theis, C. V. (1935). The Relation Between the Lowering of the Piezometric Surface and the Rate and Duration of Discharge of a Well Using Ground-Water Storage. Transactions, American Geophysical Union, 16(2), 519â€“524. https://doi.org/10.1029/TR016i002p00519
+Tongpenyai, Y., & Raghavan, R. (1981). The Effect of Wellbore Storage and Skin on Interference Test Data. Journal of Petroleum Technology, 33(1), 151â€“160. https://doi.org/10.2118/8863-PA
+Warren, J. E., & Root, P. J. (1963). The Behavior of Naturally Fractured Reservoirs. Society of Petroleum Engineers Journal, 3(3), 245â€“255. https://doi.org/10.2118/426-PA
