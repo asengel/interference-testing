@@ -1,13 +1,13 @@
-parameter,value
-case_name,Earlougher Example 9.2
-model,closed_rectangle
-h_ft,23
-mu_cp,0.8
-B_rb_stb,1.12
-ct_psi_inv,8.3e-6
-robust_loss,linear
-aspect_ratio_width_over_height,2.0
-source_xD,0.5
-source_yD,0.75
-rectangle_angle_deg,0
-interporosity_model,
+parameter,value,description
+case_name,Earlougher Example 9.2,Name printed on the plot
+run_mode,auto,Fit reservoir parameters automatically
+model,closed_rectangle,Four impermeable rectangular boundaries
+thickness_ft,23,Net flowing thickness in feet
+viscosity_cp,0.8,Reservoir fluid viscosity in centipoise
+formation_volume_factor_rb_stb,1.12,Reservoir barrels per stock-tank barrel
+total_compressibility_psi_inv,8.3e-6,Known total compressibility used to report porosity
+fit_loss,linear,Ordinary least squares or soft_l1
+rectangle_width_height_ratio,2.0,Ratio of rectangle width to height
+active_well_x_percent,50,Active well position measured from left edge as percent of width
+active_well_y_percent,75,Active well position measured from bottom edge as percent of height
+rectangle_rotation_deg,0,Azimuth of rectangle x-axis counterclockwise from x direction

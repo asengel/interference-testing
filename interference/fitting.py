@@ -1,11 +1,12 @@
+"""Line-source inverse fitting with bounded positive permeability and storativity."""
 from __future__ import annotations
-
 from dataclasses import dataclass
 from typing import Sequence
 import numpy as np
 from scipy.optimize import least_squares
-
 from .models import Reservoir, SourceWell, ObservationWell, LinearBoundary, simulate_line_source
+from .validation import (K_BOUNDS_MD, STORATIVITY_BOUNDS_PER_PSI,
+                         positive_number, validate_reservoir, validate_history, validate_geometry)
 
 
 @dataclass
@@ -49,70 +50,74 @@ def fit_k_phi_ct(
     fit_drift: bool = False,
     robust_loss: str = "soft_l1",
 ) -> FitResult:
-    """Fit permeability and phi*ct by nonlinear least squares in log-parameter space."""
-    t = np.asarray(times_hr, dtype=float)
-    y = np.asarray(observed_drop_psi, dtype=float)
-    if t.shape != y.shape:
-        raise ValueError("times and observed data must have the same shape.")
+    """Fit k and phi*ct with explicit finite optimizer bounds in log space."""
+    t, y = validate_history(times_hr, observed_drop_psi,
+                            label="line-source pressure observations", min_points=3)
+    validate_reservoir(reservoir_template.h_ft, reservoir_template.mu_cp,
+                       reservoir_template.B_rb_stb)
+    validate_geometry(source, observation, boundaries)
     if sigma_psi is None:
         sigma = np.ones_like(y)
     else:
         sigma = np.broadcast_to(np.asarray(sigma_psi, dtype=float), y.shape).copy()
-        if np.any(sigma <= 0):
-            raise ValueError("All sigma values must be positive.")
+        if np.any(~np.isfinite(sigma)) or np.any(sigma <= 0):
+            raise ValueError("All sigma_psi values must be finite and positive.")
 
-    x0 = [np.log(k0_md), np.log(phi_ct0_psi_inv)]
+    k0 = positive_number(k0_md, "initial permeability")
+    pct0 = positive_number(phi_ct0_psi_inv, "initial phi*ct")
+    for name, val, bounds in (("k0_md", k0, K_BOUNDS_MD),
+                               ("phi_ct0_psi_inv", pct0, STORATIVITY_BOUNDS_PER_PSI)):
+        if not (bounds[0] < val < bounds[1]):
+            raise ValueError(f"{name} must lie strictly inside {bounds}; got {val}.")
+
+    x0 = [np.log(k0), np.log(pct0)]
+    lb = [np.log(K_BOUNDS_MD[0]), np.log(STORATIVITY_BOUNDS_PER_PSI[0])]
+    ub = [np.log(K_BOUNDS_MD[1]), np.log(STORATIVITY_BOUNDS_PER_PSI[1])]
     if fit_offset:
-        x0.append(0.0)
+        x0.append(0.0); lb.append(-1e9); ub.append(1e9)
     if fit_drift:
-        x0.append(0.0)
+        x0.append(0.0); lb.append(-1e9); ub.append(1e9)
 
     def unpack(x):
-        k = float(np.exp(x[0]))
-        pct = float(np.exp(x[1]))
-        j = 2
-        offset = float(x[j]) if fit_offset else 0.0
-        j += int(fit_offset)
-        drift = float(x[j]) if fit_drift else 0.0
+        k, pct = float(np.exp(x[0])), float(np.exp(x[1]))
+        i = 2
+        offset = float(x[i]) if fit_offset else 0.0
+        i += int(fit_offset)
+        drift = float(x[i]) if fit_drift else 0.0
         return k, pct, offset, drift
 
     t0 = float(np.min(t))
 
     def predict(x):
         k, pct, offset, drift = unpack(x)
-        res = Reservoir(
-            h_ft=reservoir_template.h_ft,
-            mu_cp=reservoir_template.mu_cp,
-            B_rb_stb=reservoir_template.B_rb_stb,
-            phi_ct_psi_inv=pct,
-        )
-        base = simulate_line_source(t, source, observation, k, res, boundaries)
-        return base + offset + drift * (t - t0)
+        res = Reservoir(reservoir_template.h_ft, reservoir_template.mu_cp,
+                        reservoir_template.B_rb_stb, phi_ct_psi_inv=pct)
+        return simulate_line_source(t, source, observation, k, res, boundaries) + offset + drift*(t-t0)
 
-    def residuals(x):
-        return (predict(x) - y) / sigma
-
-    sol = least_squares(residuals, x0, loss=robust_loss, x_scale="jac")
+    sol = least_squares(lambda x: (predict(x)-y)/sigma, np.asarray(x0),
+                        bounds=(np.asarray(lb), np.asarray(ub)),
+                        loss=robust_loss, x_scale="jac")
     pred = predict(sol.x)
-    raw_resid = pred - y
-    rss = float(np.sum(raw_resid**2))
-    n = y.size
-    p = sol.x.size
+    residual = pred-y
+    if not np.all(np.isfinite(pred)):
+        raise RuntimeError("Nonfinite predicted pressures after fit.")
+    rss = float(np.sum(residual**2))
+    n, p = y.size, sol.x.size
     aic, aicc, bic = _information_criteria(rss, n, p)
 
-    cov = None
-    stderr = {}
+    cov, stderr = None, {}
     if sol.jac is not None and n > p:
         try:
+            # Approximate local errors; with robust losses this is NOT a full
+            # robust covariance estimator and should not be read as a 95% CI.
             jt_j_inv = np.linalg.inv(sol.jac.T @ sol.jac)
-            s2 = float(np.sum(sol.fun**2) / (n - p))
-            cov_x = jt_j_inv * s2
-            k, pct, offset, drift = unpack(sol.x)
-            # delta method from log parameters to physical parameters
-            Jtr = np.eye(p)
-            Jtr[0, 0] = k
-            Jtr[1, 1] = pct
-            cov = Jtr @ cov_x @ Jtr.T
+            s2 = float(np.sum(sol.fun**2)/(n-p))
+            cov_x = jt_j_inv*s2
+            k, pct, _, _ = unpack(sol.x)
+            jac_transform = np.eye(p)
+            jac_transform[0, 0] = k
+            jac_transform[1, 1] = pct
+            cov = jac_transform@cov_x@jac_transform.T
             names = ["k_md", "phi_ct_psi_inv"]
             if fit_offset:
                 names.append("offset_psi")
@@ -121,22 +126,9 @@ def fit_k_phi_ct(
             stderr = {name: float(np.sqrt(max(cov[i, i], 0.0))) for i, name in enumerate(names)}
         except np.linalg.LinAlgError:
             pass
-
     k, pct, offset, drift = unpack(sol.x)
-    return FitResult(
-        k_md=k,
-        phi_ct_psi_inv=pct,
-        offset_psi=offset,
-        drift_psi_per_hr=drift,
-        rss=rss,
-        rmse=float(np.sqrt(rss / n)),
-        aic=float(aic),
-        aicc=float(aicc),
-        bic=float(bic),
-        covariance=cov,
-        stderr=stderr,
-        success=bool(sol.success),
-        message=str(sol.message),
-        prediction=pred,
-        residual=raw_resid,
-    )
+    return FitResult(k_md=k, phi_ct_psi_inv=pct, offset_psi=offset,
+                     drift_psi_per_hr=drift, rss=rss, rmse=float(np.sqrt(rss/n)),
+                     aic=float(aic), aicc=float(aicc), bic=float(bic),
+                     covariance=cov, stderr=stderr, success=bool(sol.success),
+                     message=str(sol.message), prediction=pred, residual=residual)
